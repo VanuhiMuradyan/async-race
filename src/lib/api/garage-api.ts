@@ -1,5 +1,5 @@
 import { GARAGE_PAGE_LIMIT } from "../constants";
-import { httpDelete, httpGet, httpPatch, httpPost } from "../httpClient";
+import { httpDelete, httpGet, httpPost, httpPut } from "../httpClient";
 import type { Car, CreateCarData, GetCarsResponse } from "../types";
 
 export const getCars = async(page: number) : Promise<GetCarsResponse> => {
@@ -18,14 +18,15 @@ export const getCar = async(id: number) : Promise<Car> => {
 };
 
 export const createCar = async(data: CreateCarData) : Promise<Car> => {
-    const {data: car} = await httpPost<Car>(`/garage/`, data);
+    const {data: car} = await httpPost<Car>(`/garage`, data);
     return car;
 };
 
 export const updateCar = async(id: number, data: CreateCarData): Promise<Car> => {
-    const {data: car} = await httpPatch<Car>(`/garage/${id}`);
+    const {data: car} = await httpPut<Car>(`/garage/${id}`, data);
     return car;
 };
+
 
 export const deleteCar = async(id: number): Promise<void> => {
     await httpDelete<Car>(`/garage/${id}`)

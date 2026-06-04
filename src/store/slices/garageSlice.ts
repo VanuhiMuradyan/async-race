@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import { type GetCarsResponse, type Car, type CreateCarData } from "../../lib/types";
 import { createCar, deleteCar, getCars, updateCar } from "../../lib/api/garage-api";
 
@@ -46,18 +46,25 @@ export const removeCar = createAsyncThunk<number, number> (
 const garageSlice = createSlice({
   name: 'garage',
   initialState,
-  reducers: {},
+  reducers: { selectCar: (state, action: PayloadAction<Car | null>) => {
+      state.selectedCar = action.payload;
+    },
+    setPage: (state, action: PayloadAction<number>) => {
+      state.page = action.payload;
+    },
+  },
+
   extraReducers:    (builder) => {
     builder   
-    .addCase(fetchCars.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-    .addCase(fetchCars.fulfilled, (state, action) => {
-        state.loading = false;
-        state.cars = action.payload.cars;
-        state.total = action.payload.total;
-      })
+      .addCase(fetchCars.pending, (state) => {
+          state.loading = true;
+          state.error = null;
+        })
+      .addCase(fetchCars.fulfilled, (state, action) => {
+          state.loading = false;
+          state.cars = action.payload.cars;
+          state.total = action.payload.total;
+        })
      .addCase(fetchCars.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message ?? 'Error fetching cars';
@@ -82,4 +89,5 @@ const garageSlice = createSlice({
   }
 })
 
+export const { selectCar, setPage } = garageSlice.actions;
 export default garageSlice.reducer;

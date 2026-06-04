@@ -1,6 +1,6 @@
 import { BASE_URL } from "./constants";
 
-const request = async <T>(
+const request = async <T> (
   endpoint: string,
   options: RequestInit = {}
 ): Promise<{ data: T; headers: Headers }> => {
@@ -24,13 +24,13 @@ const request = async <T>(
   };
 };
 
-export const httpGet = async <T>(
+export const httpGet = async <T> (
     endpoint: string
 ) : Promise <{data: T; headers: Headers}> => 
     request<T>(endpoint)
 
 
-export const httpPost = async <T>(
+export const httpPost = async <T> (
     endpoint: string,
     body: unknown
 ) : Promise <{data: T; headers: Headers}> => 
@@ -39,7 +39,7 @@ export const httpPost = async <T>(
         body: JSON.stringify(body)
     })
 
-export const httpPut = async <T>(
+export const httpPut = async <T> (
     endpoint: string,
     body: unknown
 ) : Promise <{data: T; headers: Headers}> => 
@@ -47,13 +47,8 @@ export const httpPut = async <T>(
         method: "PUT",
         body: JSON.stringify(body)
     })
-    
-export const httpPatch = async <T>(
-    endpoint: string,
-) : Promise <{data: T; headers: Headers}> => 
-    request<T>(endpoint, { method: "POST"})
 
-export const httpDelete = async <T>(
+export const httpDelete = async <T> (
     endpoint: string,
 ) : Promise <{data: T; headers: Headers}> => 
     request<T>(endpoint, { method: "DELETE"})

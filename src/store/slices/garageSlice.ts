@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import { type GetCarsResponse, type Car, type CreateCarData } from "../../lib/types";
-import { createCar, deleteCar, getCars, updateCar } from "../../lib/api/garage-api";
+import { createCar, deleteCar, getCars, updateCar } from "../../lib/api/garage";
 
 interface GarageState {
     cars: Car[],

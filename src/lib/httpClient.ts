@@ -3,7 +3,7 @@ import { BASE_URL } from "./constants";
 const request = async <T> (
   endpoint: string,
   options: RequestInit = {}
-): Promise<{ data: T; headers: Headers }> => {
+): Promise<{ data: T; headers: Headers, status: number }> => {
   const res = await fetch(`${BASE_URL}${endpoint}`, {
     ...options,
     headers: {
@@ -13,7 +13,7 @@ const request = async <T> (
   });
 
   if (!res.ok) {
-    throw new Error(`Request failed: ${res.status}`);
+    throw {status: res.status, message: `Request failed: ${res.status}`};
   }
 
   const data = (await res.json()) as T;
@@ -21,6 +21,7 @@ const request = async <T> (
   return {
     data,
     headers: res.headers,   
+    status: res.status
   };
 };
 
@@ -47,6 +48,12 @@ export const httpPut = async <T> (
         method: "PUT",
         body: JSON.stringify(body)
     })
+
+export const httpPatch = async <T>(
+    endpoint: string,
+) : Promise <{data: T; headers: Headers}> => 
+    request<T>(endpoint, { method: "POST"})
+
 
 export const httpDelete = async <T> (
     endpoint: string,

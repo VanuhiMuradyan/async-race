@@ -39,20 +39,17 @@ export const CarList = () => {
     return (
         <>
         <div>
-      {/* Ընդհանուր քանակ */}
       <div style={{ marginBottom: '16px', color: 'rgba(255,255,255,0.4)',
         fontFamily: '"Orbitron", sans-serif', fontSize: '11px', letterSpacing: '3px' }}>
         TOTAL: {total} CARS — PAGE {page}/{totalPages}
       </div>
 
-      {/* Car-երի list */}
       <div style={{ border: '1px solid rgba(255,255,255,0.08)' }}>
         {cars.map((car) => (
           <CarCard key={car.id} car={car} />
         ))}
       </div>
 
-      {/* Pagination */}
       <div style={{ display: 'flex', gap: '8px', marginTop: '16px' }}>
         <button
           onClick={() => dispatch(setPage(page - 1))}

@@ -2,7 +2,7 @@ import { GARAGE_PAGE_LIMIT } from "../constants";
 import { httpDelete, httpGet, httpPost, httpPut } from "../httpClient";
 import type { Car, CreateCarData, GetCarsResponse } from "../types";
 
-export const getCars = async(page: number) : Promise<GetCarsResponse> => {
+export const getCars = async(page: number): Promise<GetCarsResponse> => {
     const {data, headers} = await httpGet<Car[]>(
         `/garage?_page=${page}&_limit=${GARAGE_PAGE_LIMIT}`
     );
@@ -12,12 +12,12 @@ export const getCars = async(page: number) : Promise<GetCarsResponse> => {
     return {cars: data, total};
 };
 
-export const getCar = async(id: number) : Promise<Car> => {
+export const getCar = async(id: number): Promise<Car> => {
     const {data} = await httpGet<Car>(`/garage/${id}`);
     return data;
 };
 
-export const createCar = async(data: CreateCarData) : Promise<Car> => {
+export const createCar = async(data: CreateCarData): Promise<Car> => {
     const {data: car} = await httpPost<Car>(`/garage`, data);
     return car;
 };

@@ -3,8 +3,7 @@ import type { AppDispatch, RootState } from '../store/store';
 import { useDispatch, useSelector } from 'react-redux';
 import type { CreateCarData } from '../lib/types';
 import { addCar, editCar, selectCar } from '../store/slices/garageSlice';
-
-const DEFAULT_COLOR = '#ff6b00';
+import { DEFAULT_COLOR } from '../lib/constants';
 
 export const CarForm = () => {
   const dispatch = useDispatch<AppDispatch>();

@@ -1,9 +1,11 @@
-import type { CSSProperties } from "react";
-import { useDispatch } from "react-redux";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import type { Car } from "../lib/types";
 import { removeCar, selectCar } from "../store/slices/garageSlice";
 import { CarSvg } from "./carSvg";
-import type { AppDispatch } from "../store/store";
+import type { AppDispatch, RootState } from "../store/store";
+import { useEngine } from "../hooks/useEngine";
+import { CAR_WIDTH } from "../lib/constants";
 
 interface CarCardProps {
     car: Car;
@@ -23,12 +25,34 @@ const btnStyle = (color: string, disabled = false): CSSProperties => ({
   transition: 'all 0.2s ease',
 });
 
+
 export const CarCard = ({ car }: CarCardProps) => {
   const dispatch = useDispatch<AppDispatch>();
+  const {startCar, stopCar} = useEngine();
+  
+  const trackRef = useRef<HTMLDivElement>(null);
+  
+  const carState = useSelector((state: RootState) => state.race.cars[car.id]);
+  
+  const status = carState?.status ?? 'idle';
+  const duration = carState?.duration ?? 0;
+  
+  const isRunning = status === 'running';
+  const isBroken = status === 'broken';
+  const isFinished = status === 'finished';
+  const isIdle = status === 'idle';
 
+  const [moveDistance, setMoveDistance] = useState(0);
+    useEffect(() => {
+    if (trackRef.current) {
+      setMoveDistance(trackRef.current.offsetWidth - CAR_WIDTH);
+    }
+  }, []);
+  
   const handleSelect = () => dispatch(selectCar(car));
-
   const handleRemove = () => dispatch(removeCar(car.id));
+  const handleStart = () => startCar(car.id);
+  const handleStop = () => stopCar(car.id);
 
   return (
     <div style={{
@@ -53,49 +77,81 @@ export const CarCard = ({ car }: CarCardProps) => {
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
 
-        <button style={btnStyle('rgba(0,255,128,0.8)')}>
+        <button 
+          onClick={handleStart}
+          disabled={!isIdle}
+          style={btnStyle('rgba(0,255,128,0.8)', !isIdle)}>
           A
         </button>
 
-        <button style={btnStyle('rgba(0,128,255,0.8)', true)}>
+        <button 
+          onClick={handleStop}
+          disabled={isIdle}
+          style={btnStyle('rgba(0,128,255,0.8)', isIdle)}>
           B
         </button>
       </div>
 
-      <CarSvg color={car.color} size={60} />
+      <div
+        ref={trackRef}
+        style={{
+          flex: 1,
+          position: 'relative',
+          height: '60px',
+          display: 'flex',
+          alignItems: 'center',
+          borderBottom: '1px solid rgba(255,255,255,0.08)',
+          overflow: 'hidden',
+        }}
+      >
+        <span style={{
+          position: 'absolute',
+          top: '2px',
+          left: '4px',
+          fontFamily: '"Orbitron", sans-serif',
+          fontSize: '10px',
+          letterSpacing: '2px',
+          color: isBroken ? 'rgba(255,0,0,0.6)' : 'rgba(255,255,255,0.5)',
+        }}>
+          {car.name} {isBroken ? '💥' : ''}
+        </span>
 
-      <span style={{
-        fontFamily: '"Orbitron", sans-serif',
-        fontSize: '12px',
-        fontWeight: 700,
-        letterSpacing: '2px',
-        color: 'rgba(255,255,255,0.9)',
-        minWidth: '120px',
-        textTransform: 'uppercase',
-      }}>
-        {car.name}
-      </span>
+        <div style={{
+          position: 'absolute',
+          left: 0,
 
-      <div style={{
-        flex: 1,              
-        height: '2px',
-        background: 'rgba(255,255,255,0.05)',
-        position: 'relative',
-        borderBottom: '1px solid rgba(255,255,255,0.08)',
-      }}>
+          transform: (isRunning || isBroken || isFinished)
+            ? `translateX(${moveDistance}px)`
+            : 'translateX(0)',
+          transition: isRunning
+            ? `transform ${duration}ms linear`
+            : 'none',
+        }}>
+          <CarSvg color={car.color} size={CAR_WIDTH} />
+        </div>
+
         <div style={{
           position: 'absolute',
           right: 0,
-          top: '-16px',
+          top: 0,
+          bottom: 0,
+          width: '2px',
+          background: isFinished
+            ? 'rgba(0,255,128,0.8)'
+            : 'rgba(255,255,255,0.1)',
+        }} />
+        <span style={{
+          position: 'absolute',
+          right: '4px',
+          top: '2px',
           fontFamily: '"Orbitron", sans-serif',
           fontSize: '8px',
           letterSpacing: '2px',
-          color: 'rgba(255,255,255,0.3)',
+          color: isFinished ? 'rgba(0,255,128,0.8)' : 'rgba(255,255,255,0.2)',
         }}>
-          FINISH
-        </div>
+          {isFinished ? '🏆' : 'FINISH'}
+        </span>
       </div>
-
     </div>
   );
 };

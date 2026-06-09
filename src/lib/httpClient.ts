@@ -52,7 +52,7 @@ export const httpPut = async <T> (
 export const httpPatch = async <T>(
     endpoint: string,
 ) : Promise <{data: T; headers: Headers}> => 
-    request<T>(endpoint, { method: "POST"})
+    request<T>(endpoint, { method: "PATCH"})
 
 
 export const httpDelete = async <T> (

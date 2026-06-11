@@ -33,6 +33,7 @@ export const CarCard = ({ car }: CarCardProps) => {
   const trackRef = useRef<HTMLDivElement>(null);
   
   const carState = useSelector((state: RootState) => state.race.cars[car.id]);
+  const isRacing = useSelector((state: RootState) => state.race.isRacing);
   
   const status = carState?.status ?? 'idle';
   const duration = carState?.duration ?? 0;
@@ -41,6 +42,7 @@ export const CarCard = ({ car }: CarCardProps) => {
   const isBroken = status === 'broken';
   const isFinished = status === 'finished';
   const isIdle = status === 'idle';
+
 
   const [moveDistance, setMoveDistance] = useState(0);
     useEffect(() => {
@@ -66,11 +68,18 @@ export const CarCard = ({ car }: CarCardProps) => {
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
 
-        <button onClick={handleSelect} style={btnStyle('rgba(255,107,0,0.8)')}>
+        <button 
+            onClick={handleSelect} 
+            disabled={isRunning || isRacing}
+            style={btnStyle('rgba(255,107,0,0.8)')}>
+              
           SELECT
         </button>
 
-        <button onClick={handleRemove} style={btnStyle('rgba(255,0,128,0.8)')}>
+        <button 
+            onClick={handleRemove} 
+            disabled={isRunning || isRacing}
+            style={btnStyle('rgba(255,0,128,0.8)')}>  
           REMOVE
         </button>
       </div>

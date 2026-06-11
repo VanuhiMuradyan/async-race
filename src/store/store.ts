@@ -1,11 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit';
 import garageReducer from './slices/garageSlice';
-import raceReducer from './slices/raceSlice'
+import raceReducer from './slices/raceSlice';
+import winnersReducer from './slices/winnersSlice';
 
 const store = configureStore({
   reducer: {
     garage: garageReducer,
     race: raceReducer,
+    winners: winnersReducer
   },
 });
 

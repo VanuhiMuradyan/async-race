@@ -1,6 +1,8 @@
 import { createAsyncThunk, createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import { type GetCarsResponse, type Car, type CreateCarData } from "../../lib/types";
 import { createCar, deleteCar, getCars, updateCar } from "../../lib/api/garage";
+import { deleteWinner } from "../../lib/api/winners";
+import { PAGE_LIMIT } from "../../lib/constants";
 
 interface GarageState {
     cars: Car[],
@@ -8,7 +10,7 @@ interface GarageState {
     page: number,
     selectedCar: Car | null,
     loading: boolean,
-    error: string | null
+    error: string | null,
 };
 
 const initialState: GarageState = {
@@ -39,7 +41,11 @@ export const removeCar = createAsyncThunk<number, number> (
     'garage/removeCar',
     async (id) => {
         await deleteCar(id);
-        return id;
+        try {
+          await deleteWinner(id);
+        } catch {}
+        
+      return id;
     }
 );
 
@@ -85,6 +91,11 @@ const garageSlice = createSlice({
       .addCase(removeCar.fulfilled,(state, action) => {
         state.cars = state.cars.filter((car) => car.id !== action.payload);
         state.total -= 1;
+
+        const totalPages = Math.ceil(state.total / PAGE_LIMIT);
+          if (state.page > totalPages && state.page > 1) {
+            state.page -= 1;
+          }
     })
   }
 })

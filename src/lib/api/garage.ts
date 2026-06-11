@@ -1,10 +1,10 @@
-import { GARAGE_PAGE_LIMIT } from "../constants";
+import { PAGE_LIMIT } from "../constants";
 import { httpDelete, httpGet, httpPost, httpPut } from "../httpClient";
 import type { Car, CreateCarData, GetCarsResponse } from "../types";
 
 export const getCars = async(page: number): Promise<GetCarsResponse> => {
     const {data, headers} = await httpGet<Car[]>(
-        `/garage?_page=${page}&_limit=${GARAGE_PAGE_LIMIT}`
+        `/garage?_page=${page}&_limit=${PAGE_LIMIT}`
     );
 
     const total = Number(headers.get('X-Total-Count') ?? 0);

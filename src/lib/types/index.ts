@@ -30,3 +30,20 @@ export interface RaceCarState {
   duration: number;
 };
 
+export interface Winner {
+  id: number;
+  wins: number;
+  time: number;
+};
+
+export interface WinnerWithCar extends Winner {
+  car: Car;
+};
+
+export type SortField = 'wins' | 'time';
+export type SortOrder = 'ASC' | 'DESC';
+
+export interface GetWinnersResponse {
+  winners: WinnerWithCar[];
+  total: number;
+};

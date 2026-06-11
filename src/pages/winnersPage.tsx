@@ -1,8 +1,10 @@
+import { WinnersTable } from "../components/winnersTable"
+
 export const WinnersPage = () => {
     return (
         <>
             <div>
-                <h1 className="text-2xl font-bold uppercase tracking-widest text-zinc-100 mb-6"></h1>
+                <WinnersTable />
             </div>
         </>
     )

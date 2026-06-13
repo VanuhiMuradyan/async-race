@@ -27,7 +27,6 @@ export const updateCar = async(id: number, data: CreateCarData): Promise<Car> =>
     return car;
 };
 
-
 export const deleteCar = async(id: number): Promise<void> => {
     await httpDelete<Car>(`/garage/${id}`)
 };

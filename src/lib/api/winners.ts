@@ -38,5 +38,5 @@ export const saveWinner = async(id: number, time: number): Promise<void> => {
 };
 
 export const deleteWinner = async (id: number): Promise<void> => {
-    await httpDelete(`winners/${id}`);
+    await httpDelete(`/winners/${id}`);
 };

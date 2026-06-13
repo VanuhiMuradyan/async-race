@@ -70,7 +70,7 @@ export const CarCard = ({ car }: CarCardProps) => {
 
         <button 
             onClick={handleSelect} 
-            disabled={isRunning || isRacing}
+            disabled={isRunning || isRacing} 
             style={btnStyle('rgba(255,107,0,0.8)')}>
               
           SELECT

@@ -4,12 +4,17 @@ import { createCar, deleteCar, getCars, updateCar } from "../../lib/api/garage";
 import { deleteWinner } from "../../lib/api/winners";
 import { PAGE_LIMIT } from "../../lib/constants";
 
+import { DEFAULT_COLOR } from "../../lib/constants";
+
 interface GarageState {
     cars: Car[],
     total: number,
     page: number,
     selectedCar: Car | null,
+    formName: string,
+    formColor: string,
     loading: boolean,
+    formLoading: boolean,
     error: string | null,
 };
 
@@ -18,7 +23,10 @@ const initialState: GarageState = {
     total: 0,
     page: 1,
     selectedCar: null,
+    formName: '',
+    formColor: DEFAULT_COLOR,
     loading: false,
+    formLoading: false,
     error: null,
 };
 
@@ -54,9 +62,26 @@ const garageSlice = createSlice({
   initialState,
   reducers: { selectCar: (state, action: PayloadAction<Car | null>) => {
       state.selectedCar = action.payload;
+      if (action.payload) {
+        state.formName = action.payload.name;
+        state.formColor = action.payload.color;
+      } else {
+        state.formName = '';
+        state.formColor = DEFAULT_COLOR;
+      }
+    },
+    setFormName: (state, action: PayloadAction<string>) => {
+      state.formName = action.payload;
+    },
+    setFormColor: (state, action: PayloadAction<string>) => {
+      state.formColor = action.payload;
     },
     setPage: (state, action: PayloadAction<number>) => {
       state.page = action.payload;
+    },
+    resetForm: (state) => {
+      state.formName = '';
+      state.formColor = DEFAULT_COLOR;
     },
   },
 
@@ -76,16 +101,32 @@ const garageSlice = createSlice({
         state.error = action.error.message ?? 'Error fetching cars';
       })
 
+      .addCase(addCar.pending, (state) => {
+        state.formLoading = true;
+      })
       .addCase(addCar.fulfilled, (state, action) => {
+        state.formLoading = false;
         state.cars.push(action.payload);
         state.total += 1;
       })
+      .addCase(addCar.rejected, (state) => {
+        state.formLoading = false;
+      })
 
+      .addCase(editCar.pending, (state) => {
+        state.formLoading = true;
+      })
       .addCase(editCar.fulfilled, (state, action) => {
+        state.formLoading = false;
         const index = state.cars.findIndex((car) => car.id === action.payload.id);
         if (index !== -1) {state.cars[index] = action.payload;
             state.selectedCar = null;
+            state.formName = '';
+            state.formColor = DEFAULT_COLOR;
        }
+      })
+      .addCase(editCar.rejected, (state) => {
+        state.formLoading = false;
       })
 
       .addCase(removeCar.fulfilled,(state, action) => {
@@ -100,5 +141,5 @@ const garageSlice = createSlice({
   }
 })
 
-export const { selectCar, setPage } = garageSlice.actions;
+export const { selectCar, setFormName, setFormColor, setPage, resetForm } = garageSlice.actions;
 export default garageSlice.reducer;

@@ -13,10 +13,7 @@ export const useRace = () => {
 
     const cars = useSelector((state: RootState) => state.garage.cars);
     const page = useSelector((state: RootState) => state.garage.page);
-    const winnerId = useSelector((state: RootState) => state.race.winnerId);
-    const winnerTime = useSelector((state: RootState) =>  state.race.winnerTime);
 
-    
     const startRace =  async(): Promise<void> => {
         dispatch(setRacing(true));
 

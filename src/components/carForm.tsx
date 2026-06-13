@@ -1,31 +1,18 @@
-import { useState, useEffect } from 'react';
-import type { AppDispatch, RootState } from '../store/store';
 import { useDispatch, useSelector } from 'react-redux';
+import type { AppDispatch, RootState } from '../store/store';
 import type { CreateCarData } from '../lib/types';
-import { addCar, editCar, selectCar } from '../store/slices/garageSlice';
-import { DEFAULT_COLOR } from '../lib/constants';
+import { addCar, editCar, selectCar, setFormName, setFormColor } from '../store/slices/garageSlice';
 
 export const CarForm = () => {
   const dispatch = useDispatch<AppDispatch>();
-  
 
   const selectedCar = useSelector((state: RootState) => state.garage.selectedCar);
-
-  const [name, setName] = useState('');
-  const [color, setColor] = useState(DEFAULT_COLOR);
-
-  useEffect(() => {
-    if (selectedCar) {
-      setName(selectedCar.name);
-      setColor(selectedCar.color);
-    } else {
-      setName('');
-      setColor(DEFAULT_COLOR);
-    }
-  }, [selectedCar]);
+  const name = useSelector((state: RootState) => state.garage.formName);
+  const color = useSelector((state: RootState) => state.garage.formColor);
+  const formLoading = useSelector((state: RootState) => state.garage.formLoading);
 
   const handleSubmit = () => {
-    if (!name.trim()) return;
+    if (!name.trim() || formLoading) return;
 
     const data: CreateCarData = { name: name.trim(), color };
 
@@ -33,9 +20,7 @@ export const CarForm = () => {
         dispatch(editCar({ id: selectedCar.id, data }));
     } else {
         dispatch(addCar(data));
-    } 
-    setName('');
-    setColor(DEFAULT_COLOR);
+    }
   };
 
   const handleCancel = () => {
@@ -43,6 +28,7 @@ export const CarForm = () => {
   };
 
   const isEditMode = Boolean(selectedCar);
+  const isDisabled = !name.trim() || formLoading;
 
   return (
     <div style={{
@@ -68,7 +54,7 @@ export const CarForm = () => {
       <input
         type="text"
         value={name}
-        onChange={(e) => setName(e.target.value)}
+        onChange={(e) => dispatch(setFormName(e.target.value))}
         placeholder="Car name..."
         maxLength={50}
         style={{
@@ -86,7 +72,7 @@ export const CarForm = () => {
       <input
         type="color"
         value={color}
-        onChange={(e) => setColor(e.target.value)}
+        onChange={(e) => dispatch(setFormColor(e.target.value))}
         style={{
           width: '36px',
           height: '36px',
@@ -99,7 +85,7 @@ export const CarForm = () => {
 
       <button
         onClick={handleSubmit}
-        disabled={!name.trim()}
+        disabled={isDisabled}
         style={{
           padding: '8px 20px',
           fontFamily: '"Orbitron", sans-serif',
@@ -111,12 +97,12 @@ export const CarForm = () => {
             : 'linear-gradient(135deg, #ff6b00, #ff0080)',
           border: 'none',
           color: 'white',
-          cursor: name.trim() ? 'pointer' : 'not-allowed',
-          opacity: name.trim() ? 1 : 0.4,
+          cursor: isDisabled ? 'not-allowed' : 'pointer',
+          opacity: isDisabled ? 0.4 : 1,
           clipPath: 'polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%)',
         }}
       >
-        {isEditMode ? 'UPDATE' : 'CREATE'}
+        {formLoading ? 'SUBMITTING...' : (isEditMode ? 'UPDATE' : 'CREATE')}
       </button>
 
       {isEditMode && (

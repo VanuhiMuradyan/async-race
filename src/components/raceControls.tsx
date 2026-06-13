@@ -23,6 +23,11 @@ export const RaceControls = () => {
     const {startRace, resetAllCars, generateCars} = useRace();
 
     const isRacing = useSelector((state: RootState) => state.race.isRacing);
+    const raceCars = useSelector((state: RootState) => state.race.cars);
+    
+    const allCarsIdle = Object.values(raceCars).length === 0 || 
+            Object.values(raceCars).every(car => car.status === 'idle');
+    const raceDisabled = !allCarsIdle || isRacing;
 
     return (
         <div style={{
@@ -34,8 +39,8 @@ export const RaceControls = () => {
 
         <button
             onClick={startRace}
-            disabled={isRacing}
-            style={btnStyle('linear-gradient(135deg, #ff6b00, #ff0080)', isRacing)}
+            disabled={raceDisabled}
+            style={btnStyle('linear-gradient(135deg, #ff6b00, #ff0080)', raceDisabled)}
         >
             ▶ RACE
         </button>

@@ -29,7 +29,7 @@ export const saveWinner = async(id: number, time: number): Promise<void> => {
         const {data: existing} = await httpGet<Winner>(`/winners/${id}`);
 
         await httpPut<Winner>(`/winners/${id}`, {
-            wins: existing.wins,
+            wins: existing.wins + 1,
             time: Math.min(existing.time, time)
         });
     } catch {

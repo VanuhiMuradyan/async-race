@@ -2,9 +2,8 @@ import { createAsyncThunk, createSlice, type PayloadAction } from "@reduxjs/tool
 import { type GetCarsResponse, type Car, type CreateCarData } from "../../lib/types";
 import { createCar, deleteCar, getCars, updateCar } from "../../lib/api/garage";
 import { deleteWinner } from "../../lib/api/winners";
-import { PAGE_LIMIT } from "../../lib/constants";
 
-import { DEFAULT_COLOR } from "../../lib/constants";
+import { DEFAULT_COLOR, GARAGE_PAGE_LIMIT } from "../../lib/constants";
 
 interface GarageState {
     cars: Car[],
@@ -133,7 +132,7 @@ const garageSlice = createSlice({
         state.cars = state.cars.filter((car) => car.id !== action.payload);
         state.total -= 1;
 
-        const totalPages = Math.ceil(state.total / PAGE_LIMIT);
+        const totalPages = Math.ceil(state.total / GARAGE_PAGE_LIMIT);
           if (state.page > totalPages && state.page > 1) {
             state.page -= 1;
           }

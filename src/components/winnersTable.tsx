@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import type { AppDispatch, RootState } from '../store/store';
 import { fetchWinners, setWinnersPage, toggleSort } from '../store/slices/winnersSlice';
-import { PAGE_LIMIT } from '../lib/constants';
+import { WINNERS_PAGE_LIMIT } from '../lib/constants';
 import type { SortField } from '../lib/types';
 import { CarSvg } from './carSvg';
 
@@ -32,7 +32,7 @@ export const WinnersTable = () => {
     dispatch(fetchWinners({ page, sort, order }));
   }, [dispatch, page, sort, order]);
 
-  const totalPages = Math.ceil(total / PAGE_LIMIT);
+  const totalPages = Math.ceil(total / WINNERS_PAGE_LIMIT);
 
   const sortIcon = (field: SortField) => {
     if (sort !== field) return '';
@@ -111,7 +111,7 @@ export const WinnersTable = () => {
                   fontSize: '12px',
                   color: 'rgba(255,255,255,0.4)',
                 }}>
-                  {(page - 1) * PAGE_LIMIT + index + 1}
+                  {(page - 1) * WINNERS_PAGE_LIMIT+ index + 1}
                 </td>
                 <td style={{ padding: '12px 16px' }}>
                   <CarSvg color={winner.car.color} size={40} />

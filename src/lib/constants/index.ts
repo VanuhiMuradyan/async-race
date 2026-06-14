@@ -1,6 +1,6 @@
 export const BASE_URL = import.meta.env.VITE_API_URL as string;
 
-export const PAGE_LIMIT = 7;
+export const GARAGE_PAGE_LIMIT = 7;
 
 export const DEFAULT_COLOR = '#ff6b00';
 
@@ -16,3 +16,4 @@ export const CAR_BRANDS = [
   'Chevrolet', 'Dodge',
 ];
 
+export const WINNERS_PAGE_LIMIT = 10;

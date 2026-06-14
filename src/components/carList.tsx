@@ -1,9 +1,8 @@
 import { useDispatch, useSelector } from "react-redux"
 import type { AppDispatch, RootState } from "../store/store"
 import { useEffect } from "react";
-import { fetchCars, setPage } from "../store/slices/garageSlice";
-import { PAGE_LIMIT } from "../lib/constants";
-import { CarCard } from "./carCard";
+import { fetchCars, setPage } from "../store/slices/garageSlice";import { CarCard } from "./carCard";
+import { GARAGE_PAGE_LIMIT } from "../lib/constants";
 
 export const CarList = () => {
     const dispatch = useDispatch<AppDispatch>();
@@ -17,7 +16,7 @@ export const CarList = () => {
         dispatch(fetchCars(page));
     }, [dispatch, page]);
 
-    const totalPages = Math.ceil(total / PAGE_LIMIT)
+    const totalPages = Math.ceil(total / GARAGE_PAGE_LIMIT)
 
     if (loading) {
         return (

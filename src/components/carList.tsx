@@ -14,7 +14,7 @@ export const CarList = () => {
 
     useEffect(() => {
         dispatch(fetchCars(page));
-    }, [dispatch, page]);
+    }, [dispatch, page, total]);
 
     const totalPages = Math.ceil(total / GARAGE_PAGE_LIMIT)
 

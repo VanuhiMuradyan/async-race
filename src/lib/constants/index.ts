@@ -1,5 +1,4 @@
-export const BASE_URL = import.meta.env.VITE_API_URL as string;
-
+export const BASE_URL = import.meta.env.VITE_API_URL ?? 'http://127.0.0.1:3000';
 export const GARAGE_PAGE_LIMIT = 7;
 
 export const DEFAULT_COLOR = '#ff6b00';

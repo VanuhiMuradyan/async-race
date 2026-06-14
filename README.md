@@ -1,9 +1,8 @@
 # Async Race
 
-🚀 **Deployed:** 
 [https://async-race-sandy-six.vercel.app](https://async-race-sandy-six.vercel.app)
 
-📊 **Score:** ___/400 pts
+📊 **Score:** 400/400 pts
 
 ---
 
@@ -27,7 +26,7 @@ npm run dev
 
 ---
 
-## Checklist ___/400 pts
+## Checklist 400/400 ptscd
 
 ### UI Deployment
 - [x] Deployment Platform
